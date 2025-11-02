@@ -4,11 +4,12 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
-    "dev": "react-router dev",
+    "dev": "react-router dev --port 3000",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@react-router/node": "^7.9.2",
     "@react-router/serve": "^7.9.2",
     "gsap": "^3.13.0",
