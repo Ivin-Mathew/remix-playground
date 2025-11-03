@@ -1,32 +1,25 @@
 import { useEffect, useRef, useState } from "react"
 import {gsap} from "gsap";
-import { Flip } from "gsap/all";
+import { Observer } from "gsap/all";
 import { useGSAP } from "@gsap/react";
 
 
 type Props = {}
 
 const about = (props: Props) => {
+    gsap.registerPlugin(Observer);
+    
     const [mouse, setMouse] = useState({ x: 0, y: 0 });
     const [scroll, setScroll] = useState(0);
     
     const circleRef = useRef<HTMLDivElement | null>(null);
-    const animRef = useRef<number | null>(null);
-
+    const boxRef1 = useRef<HTMLDivElement | null>(null);
+    const boxRef2 = useRef<HTMLDivElement | null>(null);
+    
+    
 
     function onMove(e: MouseEvent) {
         setMouse({x:e.clientX, y:e.clientY});
-        // if(animRef.current === null){
-        //     animRef.current = requestAnimationFrame(()=>{
-
-        //         // if(circleRef.current){
-        //         //     circleRef.current.style.left = `${e.clientX}px`;
-        //         //     circleRef.current.style.top = `${e.clientY}px`;
-        //         // }
-
-        //         animRef.current = null;
-        //     });
-        // }
     }
 
     function onScroll(e: WheelEvent){
@@ -41,6 +34,12 @@ const about = (props: Props) => {
         setScroll(scroll+deltaPixels);
     }
 
+    function changeColor( colour : string){
+        gsap.to(circleRef.current,{
+            background:colour,
+        })
+    }
+
     useGSAP(()=>{
         gsap.to(circleRef.current,{
             x:mouse.x,
@@ -48,30 +47,35 @@ const about = (props: Props) => {
             ease:"power2.out",
             duration:0.3,
         })
+
+        Observer.create({
+            target:boxRef1.current,
+            type:"pointer",
+            onHover: () =>{
+                console.log("Testing OnHover prop for box 1");
+                changeColor(getComputedStyle(boxRef1.current).backgroundColor);
+            }
+        })
+
+        Observer.create({
+            target:boxRef2.current,
+            type:"pointer",
+            onHover: () =>{
+                console.log("Testing OnHover prop for box 2");
+                changeColor(getComputedStyle(boxRef2.current).backgroundColor);
+            }
+        })
     },[mouse]);
 
     
 
     useEffect(() => {
-        // if(circleRef.current){
-        //     circleRef.current.style.position = "absolute";
-        //     circleRef.current.style.left = "0px";
-        //     circleRef.current.style.top = "0px";
-
-        //     circleRef.current.style.transform = "translate(-50%,-50%)";
-        //     circleRef.current.style.willChange = "left, top, transform";
-        //     circleRef.current.style.pointerEvents = "none";
-        // }
-
         window.addEventListener("mousemove",onMove);
         window.addEventListener("wheel",onScroll);
         return() =>{
             window.removeEventListener("mousemove", onMove);
             window.removeEventListener("wheel", onScroll);
-            // if (animRef.current !== null) cancelAnimationFrame(animRef.current);
         }
-
-
     }, [])
 
     return (
@@ -82,8 +86,15 @@ const about = (props: Props) => {
                 <p>Mouse Y = {mouse.y}</p>
                 <p>Scroll value = {scroll}</p>
             </div>
-            <div className={`absolute -top-10 -left-10 h-20 w-20 flex items-center justify-center bg-red-500 rounded-full select-none`} ref={circleRef}>
+            <div className={`absolute -top-10 -left-10 h-20 w-20 flex items-center justify-center bg-red-500 rounded-full select-none z-100`} ref={circleRef}>
                 Circle
+            </div>
+
+            <div ref={boxRef1} className="absolute left-[50dvw] top-[20dvh] h-20 w-20 bg-blue-600">
+                Box 1
+            </div>
+            <div ref={boxRef2} className="absolute left-[40dvw] top-[40dvh] h-20 w-20 bg-green-600">
+                Box 2
             </div>
         </div>
     )
