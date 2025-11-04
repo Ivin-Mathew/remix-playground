@@ -17,29 +17,31 @@ export function meta({ }: Route.MetaArgs) {
 
 export default function Home() {
 
-  const [isAnimating, setIsAnimating] = useState(false);
+  let isAnimating = false;
   const [index, setIndex] = useState(0);
 
   const screens = [0, 1, 2, 3, 4];
-  const screenLength = 5;
+
+  let wrapper : any;
 
   function ChangeScreen(direction: number) { // set direction +1 or -1 only
-    if (isAnimating) return;
-    setIsAnimating(true);
+    isAnimating = true;
+
+    let tl = gsap.timeline({
+      defaults: { duration: 0.4, ease: "power1.inOut" },
+      onComplete: () => {isAnimating = false},
+    });
 
     setIndex((current) => {
-      const next = (current + direction + screenLength) % screenLength;
+      let next = wrapper((current + direction) % screens.length);
 
       console.log("Next index is", screens[next]);
 
-      gsap.to(`.screen${screens[current]}`, {
-        x: -100,
-        duration: 0.5,
+      tl.to(`.screen${screens[current]}`, {
+        x: -100
       });
-      gsap.to(`.screen${screens[next]}`, {
-        x: +100,
-        duration: 0.5,
-        onComplete: () => setIsAnimating(false),
+      tl.to(`.screen${screens[next]}`, {
+        x: +100
       });
 
       return next;
@@ -49,20 +51,22 @@ export default function Home() {
 
 
   useGSAP(() => {
-    gsap.to(".screen0", {
+    wrapper = gsap.utils.wrap(0,screens.length);
+    gsap.set(".screen0", {
       x: 100
     })
 
     gsap.registerPlugin(Observer);
     Observer.create({
       onUp: () => {
-        !isAnimating && ChangeScreen(1);
-        console.log("Scrolled up");
+        !isAnimating && ChangeScreen(-1);
+        console.log("Scrolled up. Animating = ",isAnimating);
       },
       onDown: () => {
-        !isAnimating && ChangeScreen(-1);
-        console.log("Scrolled down");
-      }
+        !isAnimating && ChangeScreen(1);
+        console.log("Scrolled down. Animating = ",isAnimating);
+      },
+      // preventDefault: true,
     })
   })
 
