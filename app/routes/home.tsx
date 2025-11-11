@@ -36,13 +36,22 @@ export default function Home() {
       let next = wrapper((current + direction) % screens.length);
 
       console.log("Next index is", screens[next]);
-
-      tl.to(`.screen${screens[current]}`, {
-        x: -100
-      });
-      tl.to(`.screen${screens[next]}`, {
-        x: +100
-      });
+      if(direction == 1){
+        tl.to(`.screen${screens[current]}`, {
+          y: "-100dvh",
+        });
+        tl.to(`.screen${screens[next]}`, {
+          y:0,
+        });
+      }
+      else{
+       tl.to(`.screen${screens[current]}`, {
+          y: "100dvh",
+        });
+        tl.to(`.screen${screens[next]}`, {
+          y:0,
+        });
+      } 
 
       return next;
     });
@@ -53,7 +62,10 @@ export default function Home() {
   useGSAP(() => {
     wrapper = gsap.utils.wrap(0,screens.length);
     gsap.set(".screen0", {
-      x: 100
+      y:0,
+    })
+    gsap.set([".screen1",".screen2",".screen3",".screen4"],{
+      y: "100dvh",
     })
 
     gsap.registerPlugin(Observer);
@@ -71,27 +83,13 @@ export default function Home() {
   })
 
   return (
-    <div className="h-screen w-screen flex flex-col gap-10">
-      Clean React Router Project
-      <div className="screen0 bg-blue-500 h-[10dvh] w-[10dvw]">
-        Screen 1
-      </div>
-
-      <div className="screen1 bg-blue-500 h-[10dvh] w-[10dvw]">
-        Screen 2
-      </div>
-
-      <div className="screen2 bg-blue-500 h-[10dvh] w-[10dvw]">
-        Screen 3
-      </div>
-
-      <div className="screen3 bg-blue-500 h-[10dvh] w-[10dvw]">
-        Screen 4
-      </div>
-
-      <div className="screen4 bg-blue-500 h-[10dvh] w-[10dvw]">
-        Screen 5
-      </div>
+    <div className="w-screen h-screen overflow-clip flex flex-col gap-10">
+      {screens.map((item, index) =>(
+        <div key={index} className={`screen${item} h-[400px] w-screen bg-amber-600`}>
+          {item}
+        </div> 
+      )
+    )}
 
     </div>
 
