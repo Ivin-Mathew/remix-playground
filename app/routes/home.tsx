@@ -2,7 +2,7 @@ import gsap from "gsap";
 import type { Route } from "./+types/home";
 import { Observer } from "gsap/all";
 import { useGSAP } from "@gsap/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -17,41 +17,54 @@ export function meta({ }: Route.MetaArgs) {
 
 export default function Home() {
 
-  let isAnimating = false;
+
   const [index, setIndex] = useState(0);
+  const isAnimating = useRef(false);
 
   const screens = [0, 1, 2, 3, 4];
 
-  let wrapper : any;
+  const wrapper = useRef<(n: number) => number>(() => 0);
 
   function ChangeScreen(direction: number) { // set direction +1 or -1 only
-    isAnimating = true;
+    if (isAnimating.current)
+      return;
+    isAnimating.current = true;
 
-    let tl = gsap.timeline({
-      defaults: { duration: 0.4, ease: "power1.inOut" },
-      onComplete: () => {isAnimating = false},
-    });
+
 
     setIndex((current) => {
-      let next = wrapper((current + direction) % screens.length);
+      let next = wrapper.current((current + direction) % screens.length);
 
+      let tl = gsap.timeline({
+        defaults: { duration: 0.4, ease: "power1.inOut" },
+        onComplete: () => { isAnimating.current = false },
+      });
+
+      console.log("Current index is", screens[current]);
       console.log("Next index is", screens[next]);
-      if(direction == 1){
+
+      if (direction == 1) {
+        tl.set(`.screen${screens[next]}`, {
+          y: "100dvh",
+        });
         tl.to(`.screen${screens[current]}`, {
           y: "-100dvh",
         });
         tl.to(`.screen${screens[next]}`, {
-          y:0,
+          y: 0,
         });
       }
-      else{
-       tl.to(`.screen${screens[current]}`, {
+      else {
+        tl.set(`.screen${screens[next]}`, {
+          y: "-100dvh",
+        });
+        tl.to(`.screen${screens[current]}`, {
           y: "100dvh",
         });
         tl.to(`.screen${screens[next]}`, {
-          y:0,
+          y: 0,
         });
-      } 
+      }
 
       return next;
     });
@@ -60,36 +73,36 @@ export default function Home() {
 
 
   useGSAP(() => {
-    wrapper = gsap.utils.wrap(0,screens.length);
+    wrapper.current = gsap.utils.wrap(0, screens.length);
     gsap.set(".screen0", {
-      y:0,
+      y: 0,
     })
-    gsap.set([".screen1",".screen2",".screen3",".screen4"],{
+    gsap.set([".screen1", ".screen2", ".screen3", ".screen4"], {
       y: "100dvh",
     })
 
     gsap.registerPlugin(Observer);
     Observer.create({
       onUp: () => {
-        !isAnimating && ChangeScreen(-1);
-        console.log("Scrolled up. Animating = ",isAnimating);
+        if (!isAnimating.current) ChangeScreen(-1);
+        console.log("Scrolled up. Animating = ", isAnimating.current);
       },
       onDown: () => {
-        !isAnimating && ChangeScreen(1);
-        console.log("Scrolled down. Animating = ",isAnimating);
+        if (!isAnimating.current) ChangeScreen(1);
+        console.log("Scrolled down. Animating = ", isAnimating.current);
       },
-      // preventDefault: true,
+      preventDefault: true,
     })
-  })
+  }, [])
 
   return (
     <div className="w-screen h-screen overflow-clip flex flex-col gap-10">
-      {screens.map((item, index) =>(
+      {screens.map((item, index) => (
         <div key={index} className={`screen${item} h-[400px] w-screen bg-amber-600`}>
           {item}
-        </div> 
+        </div>
       )
-    )}
+      )}
 
     </div>
 
