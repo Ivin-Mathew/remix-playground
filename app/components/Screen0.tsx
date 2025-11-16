@@ -1,22 +1,21 @@
+import { useEffect, useRef, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap';
 import { Observer } from 'gsap/all';
-import React, { useEffect, useRef, useState } from 'react'
 
 type Props = {}
 
 const Screen0 = (props: Props) => {
+  
   const screenRef = useRef<HTMLDivElement>(null);
   const diskRef = useRef<HTMLDivElement>(null);
-
-  const [originalCoords, setOriginalCoords] = useState({ x: 0, y: 0 });
 
   const [diskCoords, setDiskCoords] = useState({ x: 0, y: 0 });
   const [diskBevel, setDiskBevel] = useState({ x: 0, y: 0 });
 
 
   function updateCoords(event: globalThis.Observer) {
-    if (diskRef.current && screenRef.current && event) {
+    if (diskRef.current && screenRef.current && event.x && event.y) {
       const rect = diskRef.current.getBoundingClientRect();
       const window = screenRef.current?.getBoundingClientRect();
 
@@ -31,21 +30,12 @@ const Screen0 = (props: Props) => {
     }
   }
 
-  useEffect(() => {
-    if (diskRef.current) {
-      setOriginalCoords({ x: diskRef.current?.getBoundingClientRect().top, y: diskRef.current?.getBoundingClientRect().left })
-    }
-  }, []);
-
   useGSAP(() => {
     gsap.registerPlugin(Observer);
     Observer.create({
       target: screenRef.current,
       type: "pointer",
       onMove: (event) => {
-        const x = event.x;
-        const y = event.y;
-        // console.log("Move mouse",x, y);
         updateCoords(event);
       }
     });
@@ -57,13 +47,12 @@ const Screen0 = (props: Props) => {
       y: (diskCoords.y * 100),
       rotateX: diskBevel.y,
       rotateY: diskBevel.x,
-      rotateZ: diskCoords.x * 5,
     })
   }, [diskBevel, diskCoords])
 
   useEffect(() => {
-    console.log("Disk rotation = ", diskBevel, "\nDisk coords = ", diskCoords, "\nOriginal Coords =", originalCoords);
-  }, [diskBevel, diskCoords, originalCoords]);
+    console.log("Disk rotation = ", diskBevel, "\nDisk coords = ", diskCoords);
+  }, [diskBevel, diskCoords]);
 
 
   return (

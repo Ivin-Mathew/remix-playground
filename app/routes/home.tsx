@@ -69,10 +69,10 @@ export default function Home() {
 
   useGSAP(() => {
     wrapper.current = gsap.utils.wrap(0, screens.length);
-    gsap.set(".screen0", {
+    gsap.set(".screen1", {
       y: 0,
     })
-    gsap.set([".screen1", ".screen2", ".screen3", ".screen4"], {
+    gsap.set([".screen0", ".screen2", ".screen3", ".screen4"], {
       y: "100dvh",
     })
 
