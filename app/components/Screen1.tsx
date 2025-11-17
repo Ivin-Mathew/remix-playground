@@ -4,6 +4,8 @@ import { useRef } from "react";
 
 type Props = {}
 
+/* Testin out infinite scrolling bars at various angles */
+
 const Screen1 = (props: Props) => {
   const scrollbar1 = useRef<HTMLDivElement>(null);
   const scrollbar2 = useRef<HTMLDivElement>(null);
