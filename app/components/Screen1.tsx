@@ -40,7 +40,7 @@ const Screen1 = (props: Props) => {
   return (
     /* Infinite horizontal scrolling bar */
     <div className={`absolute screen1 h-screen w-screen bg-amber-600`}>
-      <div className="relative top-20 rotate-3">
+      <div className="relative top-20 rotate-1">
         <div ref={scrollbar1} className="absolute w-dvw h-20 bg-violet-600">This is the first scrollbar</div>
         <div ref={scrollbar2} className="absolute w-dvw h-20 bg-purple-600">This is the second scrollbar</div>
       </div>
