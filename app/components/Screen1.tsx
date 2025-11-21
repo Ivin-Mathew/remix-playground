@@ -20,6 +20,7 @@ const Screen1 = (props: Props) => {
       duration:8,
       repeat:-1,
       repeatDelay:0,
+      delay:-4,
       ease:"none",
     })
 
@@ -29,7 +30,7 @@ const Screen1 = (props: Props) => {
     },{
       //to
       x:"-100dvw",
-      delay:4,
+      delay:0,
       duration:8,
       repeat:-1,
       repeatDelay:0,

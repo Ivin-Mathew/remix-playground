@@ -12,9 +12,9 @@ const about = (props: Props) => {
     const [mouse, setMouse] = useState({ x: 0, y: 0 });
     const [scroll, setScroll] = useState(0);
     
-    const circleRef = useRef<HTMLDivElement | null>(null);
-    const boxRef1 = useRef<HTMLDivElement | null>(null);
-    const boxRef2 = useRef<HTMLDivElement | null>(null);
+    const circleRef = useRef<HTMLDivElement>(null);
+    const boxRef1 = useRef<HTMLDivElement>(null);
+    const boxRef2 = useRef<HTMLDivElement>(null);
 
     let originalColor = "";
 
@@ -40,7 +40,7 @@ const about = (props: Props) => {
     }
 
     function changeColor(colour: string) {
-        gsap.to(circleRef.current, {
+        gsap.set(circleRef.current, {
             backgroundColor: colour,
         })
     }

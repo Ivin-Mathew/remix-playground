@@ -17,7 +17,7 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 export default function Home() {
-  const [index, setIndex] = useState(2); // change here when start screen changed
+  const [index, setIndex] = useState(3); // change here when start screen changed
   const isAnimating = useRef(false);
 
   const screens = [0, 1, 2, 3, 4];
@@ -69,10 +69,10 @@ export default function Home() {
 
   useGSAP(() => {
     wrapper.current = gsap.utils.wrap(0, screens.length);
-    gsap.set(".screen2", {// change here when start screen changed
+    gsap.set(".screen3", {// change here when start screen changed
       y: 0,
     })
-    gsap.set([".screen0", ".screen1", ".screen3", ".screen4"], {// change here when start screen changed
+    gsap.set([".screen0", ".screen1", ".screen2", ".screen4"], {// change here when start screen changed
       y: "100dvh",
     })
 

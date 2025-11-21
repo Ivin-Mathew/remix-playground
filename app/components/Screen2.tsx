@@ -46,13 +46,13 @@ const Screen2 = (props: Props) => {
 
 
   return (
-    <div className={`absolute screen2 h-screen w-screen bg-amber-600`}>
+    <div className={`absolute screen2 h-screen w-screen bg-gray-900`}>
       <div className='relative h-full w-full'>
         <div 
           ref={boxRef1} 
           className='absolute state1 justify-center items-center bg-green-600 h-40 w-40 border-3'
         >
-          This is the first state
+          Hover to see animation
         </div>
 
         <style>{`
