@@ -87,6 +87,7 @@ export default function Home() {
         console.log("Scrolled down. Animating = ", isAnimating.current);
       },
       preventDefault: true,
+      dragMinimum: 50,
     })
   }, [])
 
