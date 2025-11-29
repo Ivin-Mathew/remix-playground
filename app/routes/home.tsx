@@ -17,7 +17,7 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 export default function Home() {
-  const [index, setIndex] = useState(3); // change here when start screen changed
+  const [index, setIndex] = useState(4); // change here when start screen changed
   const isAnimating = useRef(false);
 
   const screens = [0, 1, 2, 3, 4];
@@ -69,26 +69,26 @@ export default function Home() {
 
   useGSAP(() => {
     wrapper.current = gsap.utils.wrap(0, screens.length);
-    gsap.set(".screen3", {// change here when start screen changed
+    gsap.set(".screen4", {// change here when start screen changed
       y: 0,
     })
-    gsap.set([".screen0", ".screen1", ".screen2", ".screen4"], {// change here when start screen changed
+    gsap.set([".screen0", ".screen1", ".screen2", ".screen3"], {// change here when start screen changed
       y: "100dvh",
     })
 
     gsap.registerPlugin(Observer);
-    Observer.create({
-      onUp: () => {
-        if (!isAnimating.current) ChangeScreen(-1);
-        console.log("Scrolled up. Animating = ", isAnimating.current);
-      },
-      onDown: () => {
-        if (!isAnimating.current) ChangeScreen(1);
-        console.log("Scrolled down. Animating = ", isAnimating.current);
-      },
-      preventDefault: true,
-      dragMinimum: 50,
-    })
+    // Observer.create({
+    //   onUp: () => {
+    //     if (!isAnimating.current) ChangeScreen(-1);
+    //     console.log("Scrolled up. Animating = ", isAnimating.current);
+    //   },
+    //   onDown: () => {
+    //     if (!isAnimating.current) ChangeScreen(1);
+    //     console.log("Scrolled down. Animating = ", isAnimating.current);
+    //   },
+    //   preventDefault: true,
+    //   dragMinimum: 50,
+    // })
   }, [])
 
   return (
